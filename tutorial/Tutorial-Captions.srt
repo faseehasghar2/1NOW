@@ -1,0 +1,764 @@
+1
+00:00:00,000 --> 00:00:03,901
+Welcome to this complete code walkthrough of One Now
+Quick Support.
+
+2
+00:00:03,901 --> 00:00:10,285
+We will connect what you see on screen to the React
+components, the booking rules, local storage, and
+
+3
+00:00:10,285 --> 00:00:10,994
+the tests.
+
+4
+00:00:10,994 --> 00:00:16,669
+The problem is simple: a vehicle booked on Turo might
+still appear available on another calendar.
+
+5
+00:00:16,669 --> 00:00:21,988
+This prototype helps an operator report that concern
+and helps support explain the next step.
+
+6
+00:00:21,988 --> 00:00:24,116
+Every booking and connection is simulated.
+
+7
+00:00:24,116 --> 00:00:27,663
+The app never contacts Turo or repairs a real
+calendar.
+
+8
+00:00:27,663 --> 00:00:30,500
+The narration in this tutorial is computer generated.
+
+9
+00:00:31,800 --> 00:00:33,726
+Start with the project map.
+
+10
+00:00:33,726 --> 00:00:38,349
+Index dot HTML supplies a root element and loads main
+dot JSX.
+
+11
+00:00:38,349 --> 00:00:45,283
+Main contains the visible application and imports the
+rules from logic dot JS and the design from styles
+
+12
+00:00:45,283 --> 00:00:46,053
+dot CSS.
+
+13
+00:00:46,053 --> 00:00:51,447
+Keeping booking rules in separate functions makes
+them easier to test without a browser.
+
+14
+00:00:51,447 --> 00:00:53,758
+Logic dot test verifies those functions.
+
+15
+00:00:53,758 --> 00:00:56,840
+The browser smoke script exercises real user actions.
+
+16
+00:00:56,840 --> 00:01:02,618
+Package dot JSON lists commands and dependencies,
+while the lock file records exact dependency
+versions.
+
+17
+00:01:02,618 --> 00:01:05,700
+There is no server side application or database.
+
+18
+00:01:07,000 --> 00:01:13,523
+To run the downloaded project on your computer,
+install a supported version of Node, open a terminal
+in
+
+19
+00:01:13,523 --> 00:01:16,059
+the project folder, and run npm ci.
+
+20
+00:01:16,059 --> 00:01:19,320
+This installs the versions recorded in the lock file.
+
+21
+00:01:19,320 --> 00:01:25,481
+Npm run dev starts Vite, which prints the local
+browser address, usually on port fifty one seventy
+
+22
+00:01:25,481 --> 00:01:25,843
+three.
+
+23
+00:01:25,843 --> 00:01:28,017
+Npm test runs the unit tests.
+
+24
+00:01:28,017 --> 00:01:31,278
+Npm run build creates the production files in dist.
+
+25
+00:01:31,278 --> 00:01:34,902
+Npm run preview serves that production build for
+local checking.
+
+26
+00:01:34,902 --> 00:01:37,439
+The Vite configuration enables the React plugin.
+
+27
+00:01:37,439 --> 00:01:40,700
+Read the README for the exact Node version
+requirements.
+
+28
+00:01:42,000 --> 00:01:45,246
+React starts by rendering App into the root element.
+
+29
+00:01:45,246 --> 00:01:51,018
+Inside App, use State remembers tickets, the selected
+tab, the form, validation errors, and the selected
+
+30
+00:01:51,018 --> 00:01:51,739
+ticket identifier.
+
+31
+00:01:51,739 --> 00:01:56,789
+The active ticket is derived by finding that
+identifier in the current tickets array.
+
+32
+00:01:56,789 --> 00:02:03,282
+This is why an update from support appears in the
+operator view: both views read the same application
+
+33
+00:02:03,282 --> 00:02:03,643
+state.
+
+34
+00:02:03,643 --> 00:02:06,889
+They are two views of one local data set.
+
+35
+00:02:06,889 --> 00:02:11,939
+Switching tabs demonstrates the two roles, but it
+does not provide authentication or permission
+
+36
+00:02:11,939 --> 00:02:12,300
+enforcement.
+
+37
+00:02:13,600 --> 00:02:15,830
+The operator form uses controlled inputs.
+
+38
+00:02:15,830 --> 00:02:19,917
+The value shown in each input comes from the form
+object.
+
+39
+00:02:19,917 --> 00:02:26,234
+When someone types or chooses an option, the change
+handler copies the existing form and replaces just
+
+40
+00:02:26,234 --> 00:02:26,977
+one field.
+
+41
+00:02:26,977 --> 00:02:29,950
+The spread operator preserves all the other answers.
+
+42
+00:02:29,950 --> 00:02:34,409
+The reusable field helper builds labels, inputs or
+selects, and error messages.
+
+43
+00:02:34,409 --> 00:02:40,355
+Demo buttons copy a predefined scenario into the same
+form, rather than using a separate submission
+
+44
+00:02:40,355 --> 00:02:40,726
+path.
+
+45
+00:02:40,726 --> 00:02:45,928
+That makes the demonstration reliable while still
+exercising the actual validation and ticket creation
+
+46
+00:02:45,928 --> 00:02:46,300
+code.
+
+47
+00:02:47,600 --> 00:02:51,259
+Validation returns an object whose keys identify
+fields with problems.
+
+48
+00:02:51,259 --> 00:02:57,480
+Required answers are trimmed, so spaces alone do not
+count as an operator name or booking reference.
+
+49
+00:02:57,480 --> 00:03:04,067
+The date helper checks the expected year month day
+format, parses the date, and compares it with the
+
+50
+00:03:04,067 --> 00:03:06,263
+normalized result to reject impossible dates.
+
+51
+00:03:06,263 --> 00:03:09,922
+The end date cannot be earlier than the start date.
+
+52
+00:03:09,922 --> 00:03:13,215
+Vehicle and connection selections are checked against
+allowed choices.
+
+53
+00:03:13,215 --> 00:03:19,436
+App displays these errors beside the inputs, and
+create Ticket validates again so the rule is also
+
+54
+00:03:19,436 --> 00:03:20,900
+enforced outside the form.
+
+55
+00:03:22,200 --> 00:03:25,487
+The bookings array is a small fictional data set.
+
+56
+00:03:25,487 --> 00:03:29,140
+Tesla has a Turo reservation and an overlapping
+direct reservation.
+
+57
+00:03:29,140 --> 00:03:32,427
+Jeep and Toyota have their own sample Turo
+reservations.
+
+58
+00:03:32,427 --> 00:03:37,906
+The overlaps function asks whether each booking
+starts on or before the other booking ends.
+
+59
+00:03:37,906 --> 00:03:41,194
+If both comparisons are true, their date ranges
+overlap.
+
+60
+00:03:41,194 --> 00:03:46,673
+The dates use a consistent sortable year month day
+format, and validation runs before detection.
+
+61
+00:03:46,673 --> 00:03:52,517
+Shared days count as overlaps because this prototype
+does not model pickup and drop off times.
+
+62
+00:03:52,517 --> 00:03:56,900
+In production, precise time and time zone rules would
+need additional design.
+
+63
+00:03:58,200 --> 00:04:04,624
+Detect first looks for a matching sample Turo
+reservation and then looks for overlapping records
+for the
+
+64
+00:04:04,624 --> 00:04:07,269
+same vehicle, excluding the reported booking
+reference.
+
+65
+00:04:07,269 --> 00:04:11,426
+A conflict takes highest priority, even when the
+connection is disconnected.
+
+66
+00:04:11,426 --> 00:04:17,851
+If there is no conflict but the connection is
+disconnected or unknown, the result is medium
+priority.
+
+67
+00:04:17,851 --> 00:04:20,118
+Otherwise the result is low priority.
+
+68
+00:04:20,118 --> 00:04:23,519
+Each result contains an explanation and recommended
+next steps.
+
+69
+00:04:23,519 --> 00:04:28,432
+The matched flag separately tells the interface
+whether the reported reference was found.
+
+70
+00:04:28,432 --> 00:04:34,100
+Low priority means no known sample conflict, not
+proof that a real calendar is correct.
+
+71
+00:04:35,400 --> 00:04:38,957
+Create Ticket turns the submitted form into a support
+record.
+
+72
+00:04:38,957 --> 00:04:45,003
+It rejects invalid input, trims the form strings,
+adds the detection result, and sets the initial
+status
+
+73
+00:04:45,003 --> 00:04:45,714
+to Open.
+
+74
+00:04:45,714 --> 00:04:51,405
+The identifier is one greater than the largest ticket
+number in the current array, formatted with
+
+75
+00:04:51,405 --> 00:04:52,116
+leading zeroes.
+
+76
+00:04:52,116 --> 00:04:57,807
+It is convenient for this single browser
+demonstration, not a globally unique identifier for a
+multi
+
+77
+00:04:57,807 --> 00:04:58,519
+user service.
+
+78
+00:04:58,519 --> 00:05:02,787
+The ticket also records a creation time and its first
+history entry.
+
+79
+00:05:02,787 --> 00:05:05,632
+After a full demo reset, numbering starts again.
+
+80
+00:05:05,632 --> 00:05:09,900
+A real shared service would need server managed
+identifiers and concurrency controls.
+
+81
+00:05:11,200 --> 00:05:15,369
+Persistence uses local Storage, which stores strings
+in the current browser profile.
+
+82
+00:05:15,369 --> 00:05:19,886
+JSON stringify converts the tickets array to text;
+JSON parse reads it back.
+
+83
+00:05:19,886 --> 00:05:23,360
+Read Tickets performs a basic structural check on the
+result.
+
+84
+00:05:23,360 --> 00:05:29,961
+If saved data is unreadable, the app shows a warning
+and prevents creating new tickets over it until the
+
+85
+00:05:29,961 --> 00:05:30,656
+user resets.
+
+86
+00:05:30,656 --> 00:05:37,257
+If writing fails, the new ticket state is not
+applied, and an error explains that the update was
+not
+
+87
+00:05:37,257 --> 00:05:37,604
+saved.
+
+88
+00:05:37,604 --> 00:05:44,205
+This is useful error handling, but local Storage is
+not a database, a secure vault, or a cross device
+
+89
+00:05:44,205 --> 00:05:44,900
+synchronization service.
+
+90
+00:05:46,200 --> 00:05:51,005
+The interface has three main component functions:
+App, Badge, and Ticket.
+
+91
+00:05:51,005 --> 00:05:56,247
+Badge creates small status labels using CSS classes
+derived from its text.
+
+92
+00:05:56,247 --> 00:06:01,053
+Ticket displays the report, detection explanation,
+matching reference disclosure, conflicting records,
+
+93
+00:06:01,053 --> 00:06:04,111
+recommended next steps, resolution, and activity
+timeline.
+
+94
+00:06:04,111 --> 00:06:07,605
+Its support prop controls which editing form appears.
+
+95
+00:06:07,605 --> 00:06:11,974
+Support staff see status and note controls for
+unresolved cases.
+
+96
+00:06:11,974 --> 00:06:16,342
+An operator viewing a resolved case sees the reopen
+form.
+
+97
+00:06:16,342 --> 00:06:22,021
+Because this component is reused, explanations and
+updates remain consistent across both views.
+
+98
+00:06:22,021 --> 00:06:27,700
+The ticket keys separate the local editing state for
+each ticket and role.
+
+99
+00:06:29,000 --> 00:06:34,979
+Update Ticket validates the chosen status and rejects
+an update that changes nothing and contains no
+
+100
+00:06:34,979 --> 00:06:35,353
+note.
+
+101
+00:06:35,353 --> 00:06:39,837
+It returns a new ticket object instead of modifying
+the old one.
+
+102
+00:06:39,837 --> 00:06:44,321
+The history array is also copied, with the new
+support event appended.
+
+103
+00:06:44,321 --> 00:06:49,926
+This immutable style helps React render updates
+predictably and makes tests easier to reason about.
+
+104
+00:06:49,926 --> 00:06:55,532
+App replaces the matching ticket in its array, saves
+the array, and shows a confirmation.
+
+105
+00:06:55,532 --> 00:07:00,763
+Investigating and Waiting for Operator are useful
+intermediate statuses: support can record progress
+and
+
+106
+00:07:00,763 --> 00:07:04,500
+requests for information without pretending the
+concern is already resolved.
+
+107
+00:07:05,800 --> 00:07:10,093
+A support tool should not close a case without
+explaining the outcome.
+
+108
+00:07:10,093 --> 00:07:15,459
+The resolution guard requires at least twenty trimmed
+characters before a ticket can become Resolved.
+
+109
+00:07:15,459 --> 00:07:18,321
+The interface asks what was verified and
+communicated.
+
+110
+00:07:18,321 --> 00:07:23,687
+The same note is stored as the documented resolution
+and added to the activity trail.
+
+111
+00:07:23,687 --> 00:07:27,622
+This minimum length is a basic guard, not a quality
+guarantee.
+
+112
+00:07:27,622 --> 00:07:32,988
+A human must still confirm the facts and agree on
+next steps with the operator.
+
+113
+00:07:32,988 --> 00:07:36,207
+In a demonstration, clearly describe the outcome as
+simulated.
+
+114
+00:07:36,207 --> 00:07:40,500
+Saving a resolution does not update a calendar or
+change a reservation.
+
+115
+00:07:41,800 --> 00:07:45,478
+Reopen Ticket is the final part of the customer
+support loop.
+
+116
+00:07:45,478 --> 00:07:50,828
+It accepts only resolved cases and requires at least
+ten trimmed characters describing what is still
+
+117
+00:07:50,828 --> 00:07:51,163
+happening.
+
+118
+00:07:51,163 --> 00:07:56,178
+The returned ticket changes back to Open and adds an
+operator event to the history.
+
+119
+00:07:56,178 --> 00:08:02,197
+The old resolution is preserved, and the interface
+labels it as a previous resolution while the issue is
+
+120
+00:08:02,197 --> 00:08:02,866
+open again.
+
+121
+00:08:02,866 --> 00:08:06,878
+Support can see what was already attempted before
+deciding the next action.
+
+122
+00:08:06,878 --> 00:08:12,897
+The reopening form does not automatically fix or
+escalate a real booking; it records a clear request
+for
+
+123
+00:08:12,897 --> 00:08:13,900
+further human investigation.
+
+124
+00:08:15,200 --> 00:08:21,783
+Styles dot CSS supplies the cream background, orange
+primary actions, rounded cards, grids, tables, and
+
+125
+00:08:21,783 --> 00:08:22,661
+priority badges.
+
+126
+00:08:22,661 --> 00:08:29,244
+Media queries adjust spacing and switch the operator
+workspace to one column on small screens.
+
+127
+00:08:29,244 --> 00:08:35,828
+Focus styles help keyboard users, field errors use
+accessibility attributes, and a reduced motion rule
+
+128
+00:08:35,828 --> 00:08:37,583
+disables transitions when requested.
+
+129
+00:08:37,583 --> 00:08:41,972
+Reset Demo Data opens a confirmation dialog with
+keyboard handling.
+
+130
+00:08:41,972 --> 00:08:46,800
+Confirming removes the application storage key and
+clears local React state.
+
+131
+00:08:46,800 --> 00:08:48,556
+Cancelling keeps the tickets.
+
+132
+00:08:48,556 --> 00:08:54,700
+These features improve usability, although the
+project has not undergone a full accessibility audit.
+
+133
+00:08:56,000 --> 00:09:00,347
+The thirteen unit tests use Node's built in test
+runner.
+
+134
+00:09:00,347 --> 00:09:05,564
+They check overlapping dates, the three priorities,
+unknown connections, validation, ticket numbering,
+
+135
+00:09:05,564 --> 00:09:08,607
+history, resolution, reopening, and stored data
+handling.
+
+136
+00:09:08,607 --> 00:09:15,128
+The Playwright smoke test launches an isolated
+Chromium profile and clicks through the real
+interface.
+
+137
+00:09:15,128 --> 00:09:20,780
+It checks required fields, an urgent ticket,
+investigation, the resolution guard, reopening,
+reload
+
+138
+00:09:20,780 --> 00:09:25,127
+persistence, other scenarios, mobile overflow, reset,
+and corrupt data handling.
+
+139
+00:09:25,127 --> 00:09:29,475
+The production build was also checked with the
+browser script.
+
+140
+00:09:29,475 --> 00:09:31,648
+These checks passed during implementation.
+
+141
+00:09:31,648 --> 00:09:37,300
+They do not prove every browser works; Firefox and
+Safari were not tested.
+
+142
+00:09:38,600 --> 00:09:41,823
+For your assessment recording, tell a simple support
+story.
+
+143
+00:09:41,823 --> 00:09:44,689
+Load the urgent demo and submit the report.
+
+144
+00:09:44,689 --> 00:09:50,419
+Explain that the sample direct reservation overlaps
+the Turo booking, so a human should review it
+
+145
+00:09:50,419 --> 00:09:50,778
+immediately.
+
+146
+00:09:50,778 --> 00:09:54,717
+Move to the dashboard, record an investigation note,
+and save it.
+
+147
+00:09:54,717 --> 00:09:58,299
+Then document a clearly simulated outcome and resolve
+the case.
+
+148
+00:09:58,299 --> 00:10:02,597
+Return to the operator view and show the shared
+timeline and resolution.
+
+149
+00:10:02,597 --> 00:10:06,179
+Finish by explaining how the operator can reopen the
+ticket.
+
+150
+00:10:06,179 --> 00:10:12,267
+The README has a timed sequence for a separate
+walkthrough under three minutes; this longer tutorial
+is
+
+151
+00:10:12,267 --> 00:10:13,700
+for understanding the code.
+
+152
+00:10:15,000 --> 00:10:17,670
+You now have the full code map.
+
+153
+00:10:17,670 --> 00:10:23,390
+React handles the views and state, pure functions
+handle booking and ticket rules, local Storage
+
+154
+00:10:23,390 --> 00:10:26,823
+preserves the demo, and tests verify the important
+paths.
+
+155
+00:10:26,823 --> 00:10:32,543
+If this became a real product, it would need
+authenticated roles, a shared backend, trustworthy
+
+156
+00:10:32,543 --> 00:10:35,975
+integration data, stronger data validation, and
+proper privacy controls.
+
+157
+00:10:35,975 --> 00:10:37,882
+Those are outside this prototype.
+
+158
+00:10:37,882 --> 00:10:43,603
+For this assessment, the most important design choice
+is the complete support loop: explain uncertainty,
+
+159
+00:10:43,603 --> 00:10:50,086
+escalate booking conflicts, document the outcome, and
+let the operator tell you when the issue is still
+
+160
+00:10:50,086 --> 00:10:50,468
+unresolved.
+
+161
+00:10:50,468 --> 00:10:53,900
+The source and README are in your GitHub repository.
