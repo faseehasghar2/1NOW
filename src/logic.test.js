@@ -20,3 +20,18 @@ test('resolution requires meaningful documentation and accepts a documented outc
 test('operator can reopen resolved ticket with reason, preserving previous outcome',()=>{const t=updateTicket(createTicket(form,[]),'Resolved','Operator confirmed dates after a simulated manual review.');assert.throws(()=>reopenTicket(t,''));const u=reopenTicket(t,'Dates are still showing as available.');assert.equal(u.status,'Open');assert.equal(u.history.at(-1).actor,'Operator');assert.equal(u.resolution,t.resolution);assert.throws(()=>reopenTicket(u,'Still showing available'));});
 test('invalid or empty support updates are rejected',()=>{const t=createTicket(form,[]);assert.throws(()=>updateTicket(t,'Invalid','Some note'));assert.throws(()=>updateTicket(t,'Open',''));});
 test('persisted tickets survive serialization and corrupt storage is rejected',()=>{const tickets=[createTicket(form,[])];const storage={getItem:key=>key===STORAGE_KEY?JSON.stringify(tickets):null};assert.deepEqual(readTickets(storage),tickets);assert.throws(()=>readTickets({getItem:()=>'{bad'}));assert.throws(()=>readTickets({getItem:()=>JSON.stringify([{}])}));assert.deepEqual(readTickets({getItem:()=>null}),[]);});
+
+test('share summary includes a demo disclaimer, actionable ticket information and the correct resolution label',async()=>{
+ const {formatTicketSummary}=await import('./logic.js');
+ const ticket=createTicket(demos[0].form,[]);
+ const draft=formatTicketSummary(ticket);
+ assert.match(draft,/demonstration data only/);
+ assert.match(draft,/QS-001.*High priority.*Open/);
+ assert.match(draft,/TU-84219/);
+ assert.match(draft,/Escalate to a human support specialist immediately/);
+ assert.match(draft,/No live booking or calendar was checked or changed/);
+ const resolved=updateTicket(ticket,'Resolved','Demo review completed; operator confirmed the agreed next steps.');
+ assert.match(formatTicketSummary(resolved),/Resolution: Demo review completed/);
+ const reopened=reopenTicket(resolved,'Dates are still showing as available.');
+ assert.match(formatTicketSummary(reopened),/Previous resolution: Demo review completed/);
+});

@@ -30,6 +30,7 @@ npm run preview  # Serve the production build, normally port 4173
 - Support dashboard with status changes, investigation notes, resolution documentation, and an operator-visible activity trail.
 - Resolution requires a note of at least 20 characters; operators can reopen with a reason of at least 10 characters. Length is a basic guard, not a substitute for human judgment.
 - localStorage persistence, clear storage error messages, and reset confirmation.
+- Copy a case summary or open a prefilled email draft for a support handoff. Clipboard access has a manual-copy fallback; the app never sends the email.
 - Responsive desktop/mobile UI, keyboard-accessible controls, and reduced-motion support.
 
 ## Browser smoke check

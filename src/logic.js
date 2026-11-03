@@ -53,3 +53,24 @@ export function readTickets(storage) {
   if (!Array.isArray(parsed) || parsed.some(t => !t || typeof t.id !== 'string' || !statuses.includes(t.status) || !Array.isArray(t.history) || !Array.isArray(t.steps) || !Array.isArray(t.conflicts))) throw new Error('Saved demo data could not be read. Reset demo data to start again.');
   return parsed;
 }
+
+// A compact handoff for copying into a support tool or preparing an email draft.
+// No data is sent by the application; users decide where to share it.
+export function formatTicketSummary(ticket) {
+  const lines = [
+    '1Now Quick Support — unofficial prototype, demonstration data only',
+    `Ticket: ${ticket.id} | ${ticket.priority} priority | ${ticket.status}`,
+    `Operator: ${ticket.operator}`,
+    `Vehicle: ${ticket.vehicle}`,
+    `Booking reference: ${ticket.reference}`,
+    `Booking dates: ${ticket.start} to ${ticket.end}`,
+    `Calendar connection: ${ticket.connection}`,
+    `Issue: ${ticket.summary}`,
+    `Assessment: ${ticket.explanation}`,
+    'Recommended next steps:',
+    ...ticket.steps.map((step, i) => `${i + 1}. ${step}`),
+  ];
+  if (ticket.resolution) lines.push(`${ticket.status === 'Resolved' ? 'Resolution' : 'Previous resolution'}: ${ticket.resolution}`);
+  lines.push('Sample records only. No live booking or calendar was checked or changed.');
+  return lines.join('\n');
+}
