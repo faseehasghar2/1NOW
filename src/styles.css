@@ -19,3 +19,59 @@ nav{gap:10px;border-bottom:1px solid #e5eaf1;margin-bottom:29px}nav button{color
 @media(prefers-reduced-motion:reduce){.guide-art>span,.guide-art i{animation:none!important}.demo-card:hover{transform:none}}
 /* Keep helper text legible against the pale blue panel. */
 .guide>p{color:#55738f}.guide li span{color:#607e9a}.guide-note{color:#607d99}.data-note,.share-help{color:#697d91}.share-manual textarea{background:#f8fbff;border-color:#cfdef0;font-weight:400}
+
+/* Interactive motion stays subtle, runs once for new content, and respects system preferences. */
+@media (prefers-reduced-motion: no-preference) {
+  .report, .guide, .ticket, .cases, .table-card, .empty {
+    animation: workspace-appear 380ms cubic-bezier(.2,.65,.25,1) both;
+  }
+  .ticket .finding, .ticket .resolution, .notice, .alert {
+    animation: feedback-appear 280ms ease-out both;
+  }
+  .case, .share-actions button, .share-actions a, .text-button, .heading-row .ghost {
+    transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+  .case:hover, .share-actions button:hover, .share-actions a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px #285b9a12;
+  }
+  .case:active, .share-actions button:active, .share-actions a:active {
+    transform: translateY(0);
+  }
+  .demo-card .arrow, .form-footer .primary span {
+    transition: transform 180ms ease, color 180ms ease;
+  }
+  .demo-card:hover .arrow, .form-footer .primary:hover span {
+    transform: translateX(4px);
+    color: inherit;
+  }
+  .demo-card:focus-visible .arrow, .form-footer .primary:focus-visible span {
+    transform: translateX(4px);
+  }
+  .stats strong, .count { animation: count-appear 320ms ease-out both; }
+  .timeline > div:last-child .timeline-dot { animation: activity-appear 420ms ease-out both; }
+  @keyframes workspace-appear {
+    from { opacity: .92; transform: translateY(7px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes feedback-appear {
+    from { opacity: .9; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes count-appear {
+    from { opacity: .75; transform: translateY(3px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes activity-appear {
+    from { box-shadow: 0 0 0 6px #a8c9f55c; }
+    to { box-shadow: 0 0 0 0 transparent; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .report, .guide, .ticket, .cases, .table-card, .empty,
+  .ticket .finding, .ticket .resolution, .notice, .alert,
+  .stats strong, .count, .timeline > div:last-child .timeline-dot {
+    animation: none !important;
+  }
+}
+.case-filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin:18px 0 14px}.case-filters label{flex:1 1 170px}.case-filters input,.case-filters select{margin-top:6px}.filter-count{color:#74879c;font-size:11px;padding:0 0 12px;white-space:nowrap}.filter-empty{color:#6d8299;font-size:12px;padding:10px 0}.table-card .case-filters{padding:18px 18px 0}.table-card .filter-empty{padding:0 18px 14px;margin:0}@media(max-width:700px){.case-filters{gap:9px}.case-filters label{flex:1 1 100%}.filter-count{padding:2px 0}}

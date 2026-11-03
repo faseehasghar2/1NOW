@@ -74,3 +74,49 @@ export function formatTicketSummary(ticket) {
   lines.push('Sample records only. No live booking or calendar was checked or changed.');
   return lines.join('\n');
 }
+
+/** Search uses only fields shown in the case list; filters do not change saved tickets. */
+export function filterTickets(tickets, query = '', status = 'All statuses') {
+  const term = query.trim().toLocaleLowerCase();
+  return tickets.filter(ticket =>
+    (status === 'All statuses' || ticket.status === status) &&
+    (!term || [ticket.id, ticket.operator, ticket.vehicle, ticket.reference, ticket.summary].some(value => String(value ?? '').toLocaleLowerCase().includes(term)))
+  );
+}
+
+// iCalendar text escaping and octet-aware line folding (RFC 5545).
+function escapeCalendarText(value) {
+  return String(value).replace(/\\/g, '\\\\').replace(/\r\n|\r|\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
+}
+function foldCalendarLine(line) {
+  const encoder = new TextEncoder();
+  let current = '', bytes = 0;
+  const pieces = [];
+  for (const char of line) {
+    const size = encoder.encode(char).length;
+    if (bytes + size > 75) { pieces.push(current); current = ' '; bytes = 1; }
+    current += char;
+    bytes += size;
+  }
+  pieces.push(current);
+  return pieces.join('\r\n');
+}
+/** Returns a standalone all-day .ics reminder; importing it is an explicit user action. */
+export function createCalendarReminder(ticket, now = new Date()) {
+  if (!validDate(ticket.start) || !validDate(ticket.end) || ticket.end < ticket.start || ticket.end === '9999-12-31') {
+    throw new Error('A valid booking date range is required to create a calendar reminder.');
+  }
+  const endExclusive = new Date(`${ticket.end}T00:00:00Z`);
+  endExclusive.setUTCDate(endExclusive.getUTCDate() + 1);
+  const stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+  const uid = `${String(ticket.id).replace(/[^a-z0-9-]/gi, '')}-${String(ticket.created).replace(/[^0-9]/g, '')}@quick-support.local`;
+  return [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//1Now Quick Support//Demo Reminder//EN', 'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT', `UID:${uid}`, `DTSTAMP:${stamp}`,
+    `DTSTART;VALUE=DATE:${ticket.start.replace(/-/g, '')}`,
+    `DTEND;VALUE=DATE:${endExclusive.toISOString().slice(0, 10).replace(/-/g, '')}`,
+    `SUMMARY:${escapeCalendarText(`Demo booking review: ${ticket.vehicle} (${ticket.id})`)}`,
+    `DESCRIPTION:${escapeCalendarText(`Demo data only. Review support case ${ticket.id}. Booking reference: ${ticket.reference}. No live calendar or booking was checked or changed.`)}`,
+    'TRANSP:TRANSPARENT', 'END:VEVENT', 'END:VCALENDAR', ''
+  ].map(foldCalendarLine).join('\r\n');
+}

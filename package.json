@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "node --test",
-    "test:browser": "node scripts/browser-smoke.mjs"
+    "test:browser": "node scripts/browser-smoke.mjs",
+    "test:browser-interactive": "node scripts/browser-interactive.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",

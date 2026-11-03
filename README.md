@@ -30,6 +30,7 @@ npm run preview  # Serve the production build, normally port 4173
 - Support dashboard with status changes, investigation notes, resolution documentation, and an operator-visible activity trail.
 - Resolution requires a note of at least 20 characters; operators can reopen with a reason of at least 10 characters. Length is a basic guard, not a substitute for human judgment.
 - localStorage persistence, clear storage error messages, and reset confirmation.
+- Search and filter cases by status, use a guided self-check, and download a demo booking-date event for manual calendar import.
 - Copy a case summary or open a prefilled email draft for a support handoff. Clipboard access has a manual-copy fallback; the app never sends the email.
 - Responsive desktop/mobile UI, keyboard-accessible controls, and reduced-motion support.
 
@@ -40,9 +41,10 @@ With the development server running in another terminal:
 ```sh
 npx playwright install chromium
 npm run test:browser
+npm run test:browser-interactive # guided checklist, filters, calendar download
 ```
 
-For an installed Chromium (as in this cloud environment), use `CHROMIUM_PATH=/usr/bin/chromium npm run test:browser`. Optionally set `APP_URL` to test a different server address. This uses a fresh isolated browser profile; it does not touch your regular demo tickets. It checks the full resolution/reopen loop, all demo scenarios, required and reversed-date validation, persistence, mobile overflow, reset, corrupt storage handling, and browser runtime errors. Screenshots are written under `/tmp`.
+For an installed Chromium (as in this cloud environment), use `CHROMIUM_PATH=/usr/bin/chromium npm run test:browser`. Optionally set `APP_URL` to test a different server address. Both browser tests use a fresh isolated browser profile; they do not touch your regular demo tickets. It checks the full resolution/reopen loop, all demo scenarios, required and reversed-date validation, persistence, mobile overflow, reset, corrupt storage handling, and browser runtime errors. Screenshots are written under `/tmp`.
 
 ## Three-minute Loom walkthrough
 

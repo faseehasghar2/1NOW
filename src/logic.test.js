@@ -35,3 +35,38 @@ test('share summary includes a demo disclaimer, actionable ticket information an
  const reopened=reopenTicket(resolved,'Dates are still showing as available.');
  assert.match(formatTicketSummary(reopened),/Previous resolution: Demo review completed/);
 });
+
+test('case search and status filtering find matching tickets without altering them', async () => {
+ const {filterTickets}=await import('./logic.js');
+ const first=createTicket(demos[0].form,[]);
+ const second=createTicket(demos[1].form,[first]);
+ const waiting=updateTicket(second,'Waiting for Operator','Please verify the calendar connection.');
+ const tickets=[first,waiting];
+ assert.deepEqual(filterTickets(tickets,' TU-84219 ').map(t=>t.id),[first.id]);
+ assert.deepEqual(filterTickets(tickets,'jeep','Waiting for Operator').map(t=>t.id),[waiting.id]);
+ assert.deepEqual(filterTickets(tickets,'jeep','Resolved'),[]);
+ assert.equal(filterTickets(tickets,'','All statuses').length,2);
+ assert.equal(tickets[1].status,'Waiting for Operator');
+});
+
+test('calendar reminder preserves inclusive booking dates and escapes user-controlled text', async () => {
+ const {createCalendarReminder}=await import('./logic.js');
+ const ticket={...createTicket(demos[0].form,[]),reference:'ABC,123;\\test\nnew'};
+ const text=createCalendarReminder(ticket,new Date('2026-11-01T10:20:30Z'));
+ assert.match(text,/DTSTART;VALUE=DATE:20261110\r\n/);
+ assert.match(text,/DTEND;VALUE=DATE:20261115\r\n/);
+ assert.match(text,/DTSTAMP:20261101T102030Z\r\n/);
+ assert.match(text,/ABC\\,123\\;\\\\test\\nnew/);
+ assert.match(text,/Demo data only/);
+ assert.match(text,/TRANSP:TRANSPARENT/);
+ assert.ok(text.split('\r\n').every(line=>new TextEncoder().encode(line).length<=75));
+ assert.throws(()=>createCalendarReminder({...ticket,end:'9999-12-31'}));
+});
+
+test('calendar reminder handles month and leap year boundary as all-day dates', async () => {
+ const {createCalendarReminder}=await import('./logic.js');
+ const ticket={...createTicket(demos[0].form,[]),start:'2028-02-29',end:'2028-02-29'};
+ const text=createCalendarReminder(ticket,new Date('2026-01-01T00:00:00Z'));
+ assert.match(text,/DTSTART;VALUE=DATE:20280229/);
+ assert.match(text,/DTEND;VALUE=DATE:20280301/);
+});
