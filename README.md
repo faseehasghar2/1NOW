@@ -21,6 +21,12 @@ npm run build    # Production output in dist/
 npm run preview  # Serve the production build, normally port 4173
 ```
 
+## Open the Kanban board directly
+
+The board is the default Support Dashboard view. From Operator View, click **Support Dashboard · Kanban** or **Open Kanban board**. You can also share the direct demo link: **https://faseehasghar2.github.io/1NOW/#support**.
+
+The board renders its four columns even when there are no tickets. Click **Load 3 demo tickets** to populate representative cases in local browser storage. Drag cards between Open, Investigating and Waiting for Operator; to enter Resolved, open the card and enter the required documented resolution. No live support notification or external booking update takes place.
+
 ## Features
 
 - Three one-click scenarios with realistic fictional November 2026 bookings.
