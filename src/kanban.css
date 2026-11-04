@@ -60,3 +60,10 @@
 .support-shortcut button{background:#fff;color:#7623cb;border:1px solid #dfc4f6;border-radius:9px;font-weight:800;font-size:11px;white-space:nowrap;padding:10px 13px}
 .support-shortcut button:hover{background:#f3e7ff;border-color:#ba87eb}
 @media(max-width:700px){.support-shortcut{flex-direction:column;align-items:stretch;gap:10px}.support-shortcut button{width:100%}}
+
+
+.kanban-first-use{display:flex;align-items:center;justify-content:space-between;gap:15px;background:#f3ebff;border:1px solid #e5d2f9;color:#624779;border-radius:12px;padding:13px 16px;margin-bottom:15px;font-size:12px;line-height:1.55}
+.kanban-first-use b{color:#542a7d}
+.kanban-first-use button{background:#7c28db;color:#fff;border:1px solid #7c28db;border-radius:9px;font-weight:750;font-size:11px;white-space:nowrap;padding:11px 14px}
+.kanban-first-use button:hover{background:#6521bf}
+@media(max-width:700px){.kanban-first-use{flex-direction:column;align-items:stretch}.kanban-first-use button{width:100%}}
