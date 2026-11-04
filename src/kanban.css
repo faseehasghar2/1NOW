@@ -17,7 +17,7 @@
 .kanban-column--waiting-for-operator{--stage:#d6a064;--stage-tint:#fff0dd;--stage-text:#80532b}
 .kanban-column--resolved{--stage:#69a786;--stage-tint:#e4f2e7;--stage-text:#316e4d}
 .kanban-column.is-drop-target{border-color:var(--stage);background:var(--stage-tint);box-shadow:inset 0 0 0 2px var(--stage),0 10px 22px #38274d10}
-.kanban-column-head{padding:18px 15px 17px;background:var(--stage-tint);border-radius:14px 14px 0 0;min-height:98px}
+.kanban-column-head{display:block;height:auto;position:static;z-index:auto;backdrop-filter:none;border-bottom:0;justify-content:initial;align-items:initial;padding:18px 15px 17px;background:var(--stage-tint);border-radius:14px 14px 0 0;min-height:98px}
 .kanban-heading-line{display:flex;gap:10px;align-items:center}
 .kanban-heading-line h3{font-size:15px;letter-spacing:-.3px;margin:0;flex:1;color:var(--stage-text);font-weight:800;line-height:1.3}
 .kanban-stage-dot{width:9px;height:9px;border-radius:50%;background:var(--stage);flex-shrink:0;box-shadow:0 0 0 4px #ffffff80}
