@@ -53,3 +53,10 @@
 @media(max-width:1100px){.kanban-board{min-width:940px}}
 @media(max-width:700px){.support-view-actions{width:100%;justify-content:space-between}.support-view-toggle button{padding:9px 12px}.kanban-shell{padding:14px}.kanban-board{min-width:890px;gap:10px}.kanban-column-head{padding:15px 12px}.kanban-stack{padding:12px 9px}.kanban-case{padding:13px 10px}.support-selected-case .ticket{max-width:100%}}
 @media(prefers-reduced-motion:reduce){.kanban-column,.kanban-case{transition:none!important}.kanban-case:hover{transform:none!important}}
+
+
+/* Easy-to-find entrance when customers are looking at Operator View. */
+.support-shortcut{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:13px 16px;margin:-12px 0 23px;background:#f8f0ff;border:1px solid #ead8f8;border-radius:12px;color:#5c3c78;font-size:12px}
+.support-shortcut button{background:#fff;color:#7623cb;border:1px solid #dfc4f6;border-radius:9px;font-weight:800;font-size:11px;white-space:nowrap;padding:10px 13px}
+.support-shortcut button:hover{background:#f3e7ff;border-color:#ba87eb}
+@media(max-width:700px){.support-shortcut{flex-direction:column;align-items:stretch;gap:10px}.support-shortcut button{width:100%}}
