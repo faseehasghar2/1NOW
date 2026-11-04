@@ -27,7 +27,7 @@ npm run preview  # Serve the production build, normally port 4173
 - Required-field and date validation; date-only inclusive overlap detection.
 - High-priority booking-conflict escalation, medium-priority disconnected/unknown connections, and low-priority monitoring guidance.
 - Unique sequential ticket IDs, priorities, explanations, recommended actions, and sample conflict details.
-- Support dashboard with a four-column Kanban board (Open, Investigating, Waiting for Operator, Resolved), a switchable table view, searchable/filterable tickets, and priority-tagged case cards. Select a Kanban card to open its full case details, save notes, and update its status; the board automatically places it in the new status column. Status changes still use the documented support workflow rather than unverified drag-and-drop transitions.
+- Support dashboard with a four-column Kanban board (Open, Investigating, Waiting for Operator, Resolved), a switchable table view, searchable/filterable tickets, and priority-tagged case cards. The Kanban board has prominent colored stage headers, stacked cards, and drag-and-drop between active stages. Select a card to open its full case details, add notes, and update status. Dragging to Resolved does not bypass the required meaningful resolution note, and resolved cases must be reopened through Operator View.
 - Support dashboard with status changes, investigation notes, resolution documentation, and an operator-visible activity trail.
 - Resolution requires a note of at least 20 characters; operators can reopen with a reason of at least 10 characters. Length is a basic guard, not a substitute for human judgment.
 - localStorage persistence, clear storage error messages, and reset confirmation.
@@ -51,7 +51,7 @@ For an installed Chromium (as in this cloud environment), use `CHROMIUM_PATH=/us
 
 1. **0:00–0:20:** Introduce the problem and the demonstration-only disclaimer. Click **Urgent Booking Conflict** to populate the form.
 2. **0:20–0:50:** Review dates and click **Check Issue & Create Ticket**. Show the ticket number, high priority, overlapping direct reservation, and human escalation guidance.
-3. **0:50–1:20:** Open **Support Dashboard**, select the ticket in the **Kanban board**, choose **Investigating**, and add: “Reviewing the two sample reservations; contacting the operator to verify vehicle availability.” Save the update.
+3. **0:50–1:20:** Click **Support Dashboard · Kanban** from Operator View, select the ticket in the **Kanban board**, choose **Investigating**, and add: “Reviewing the two sample reservations; contacting the operator to verify vehicle availability.” Save the update.
 4. **1:20–2:00:** Show the ticket moving into **Investigating** on the board, then choose **Resolved**. Enter a clearly simulated outcome, for example: “Demo review complete: the operator confirmed the sample conflict was reviewed and agreed next steps. No external booking was changed.” Save.
 5. **2:00–2:30:** Return to **Operator View**. Show the updated status, activity, and documented outcome. Explain that the operator can reopen if the problem persists.
 6. **2:30–2:50:** Briefly mention the disconnected/no-known-conflict scenarios and Reset Demo Data.
