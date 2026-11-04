@@ -82,6 +82,14 @@ Data stays in this browser profile under `1now-quick-support-v1`. Reset removes 
 - `src/logic.test.js`: dependency-free unit tests.
 - `src/styles.css`: responsive visual design.
 
+## GitHub Pages deployment
+
+The source code is on `main`. The previously published `gh-pages` branch contains an older compiled site, so commits to `main` alone do not update that branch.
+
+A GitHub Actions workflow at `.github/workflows/deploy.yml` now installs dependencies, runs unit tests, builds the Vite app with `base: '/1NOW/'`, and publishes `dist/` directly to GitHub Pages on pushes to `main`.
+
+**One-time repository setting:** Open **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions** (not the old `gh-pages` branch). Then open **Actions → Build and deploy 1NOW to GitHub Pages → Run workflow** and choose `main`. The published site remains `https://faseehasghar2.github.io/1NOW/`. Check that the deployment job completes successfully; browser refresh does not deploy code.
+
 ## GitHub publishing
 
 The npm project is named `1now-quick-support`. The supplied checkout currently belongs to `faseehasghar2/1NOW`; creating a differently named GitHub repository is a separate publishing step. Create an empty repository called `1now-quick-support`, then add it as a remote and push the prepared branch. Never commit `node_modules`, `dist`, credentials, or `.env` files. The lockfile is included for repeatable installation. No paid service or credentials are required to run this app. Browser smoke checks use Playwright as a development dependency only.
